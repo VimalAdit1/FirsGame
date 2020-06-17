@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Bouncy
+  m_Name: Bouncy 2
   m_Shader: {fileID: -6465566751694194690, guid: f9478eca3a994e14bb0031ced3dd501c,
     type: 3}
   m_ShaderKeywords: 
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_9E1210B: 1
+    - Vector1_9E1210B: 0.8
     - Vector1_B1D25293: 0
     - _AlphaClip: 0
     - _Blend: 0
@@ -87,7 +87,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_45F40D52: {r: 0.05660379, g: 0.05099681, b: 0.05099681, a: 0}
-    - Color_D2EA1133: {r: 0.12635633, g: 1.0970027, b: 0.93618554, a: 0}
+    - Color_D2EA1133: {r: 1.4645847, g: 1.311225, b: 0.046007898, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
