@@ -40,6 +40,7 @@ public class Ball : MonoBehaviour
         }
         if(Input.GetButtonDown("Fire1")&&Time.time>=nextPower&&dragInitiated==false)
         {
+            Debug.Log(Input.GetButtonDown("Fire1"));
             slowmoEffect.SetActive(true);
             slowmoEffect2.SetActive(true);
             dragInitiated = true;
@@ -52,6 +53,7 @@ public class Ball : MonoBehaviour
         } 
         if(Input.GetButton("Fire1")&&dragInitiated)
         {
+            Debug.Log("In Drag");
             startPosition = Camera.main.ScreenToWorldPoint(dragInitPosition);
             startPosition.z = zOffset;
             ballPosition = transform.position;
@@ -65,6 +67,7 @@ public class Ball : MonoBehaviour
         }
         else if(Input.GetButtonUp("Fire1")&&dragInitiated)
         {
+            Debug.Log(" Drag");
             slowmoEffect.SetActive(false);
             slowmoEffect2.SetActive(false);
             Time.timeScale = 1;
