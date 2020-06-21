@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Ball : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Ball : MonoBehaviour
     public GameObject floor;
     public float ballForce = 2f;
     public float dragDuration = 3f;
-    public float lineLength = 3f;
+    public float lineLength;
     public float zOffset;
     public float cooldown = 5f;
     Vector3 dragInitPosition;
@@ -40,34 +41,34 @@ public class Ball : MonoBehaviour
         }
         if(Input.GetButtonDown("Fire1")&&Time.time>=nextPower&&dragInitiated==false)
         {
-            Debug.Log(Input.GetButtonDown("Fire1"));
+            
             slowmoEffect.SetActive(true);
             slowmoEffect2.SetActive(true);
             dragInitiated = true;
             Time.timeScale = 0.2f;
             Time.fixedDeltaTime = Time.timeScale * 0.02f;
-            dragInitPosition = Input.mousePosition;
-            startPosition = Camera.main.ScreenToWorldPoint(dragInitPosition);
-            startPosition.z = zOffset;
+            dragInitPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
+            startPosition = dragInitPosition;
      
         } 
         if(Input.GetButton("Fire1")&&dragInitiated)
         {
+            Debug.Log("start position in drag" + startPosition);
             Debug.Log("In Drag");
-            startPosition = Camera.main.ScreenToWorldPoint(dragInitPosition);
-            startPosition.z = zOffset;
             ballPosition = transform.position;
             ballPosition.z = zOffset;
             slowmoEffect.SetActive(true);
             slowmoEffect2.SetActive(true);
-            endPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log(Input.mousePosition);
+            endPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,10f));
             endPosition.z = zOffset;
+            Debug.Log("end position in drag" + endPosition);
             Vector3 direction = startPosition - endPosition;
             DrawLine(direction,ballPosition);
         }
         else if(Input.GetButtonUp("Fire1")&&dragInitiated)
         {
-            Debug.Log(" Drag");
+ 
             slowmoEffect.SetActive(false);
             slowmoEffect2.SetActive(false);
             Time.timeScale = 1;
@@ -84,6 +85,8 @@ public class Ball : MonoBehaviour
         start = new Vector3(Mathf.Clamp(start.x, -lineLength, lineLength), Mathf.Clamp(start.y, -lineLength, lineLength),start.z);
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0,start+end);
+        Debug.Log("start position" + start + end);
+        Debug.Log("End position" +end);
         lineRenderer.SetPosition(1,end);
     }
     private void OnCollisionEnter(Collision collision)
