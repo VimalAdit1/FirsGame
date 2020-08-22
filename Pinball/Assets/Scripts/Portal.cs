@@ -15,6 +15,7 @@ public class Portal : MonoBehaviour
         if(collider.gameObject.CompareTag("Ball"))
         {
             ball.transform.position = exitPortal.transform.position + offset;
+            AudioManager.instance.StartPlaying("portal");
         }
     }
 }
