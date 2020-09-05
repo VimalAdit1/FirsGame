@@ -12,10 +12,6 @@ public class Hover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (isClockwise)
-        {
-            zRotationFactor = zRotationFactor * -1;
-        }
       rotateOffset = new Vector3(xRotationFactor, yRotationFactor, zRotationFactor);
     }
 

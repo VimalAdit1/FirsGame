@@ -10,11 +10,14 @@ public class Ball : MonoBehaviour
     public LineRenderer lineRenderer;
     public Rigidbody rb;
     public GameObject floor;
+    public Material normal;
+    public Material powerEnabled;
     public float ballForce = 2f;
     public float dragDuration = 3f;
     public float lineLength;
     public float zOffset;
     public float cooldown = 5f;
+    public GameObject slowMoPost;
     Vector3 dragInitPosition;
     Vector3 startPosition;
     Vector3 endPosition;
@@ -23,61 +26,49 @@ public class Ball : MonoBehaviour
     float maxForce = 5f;
     float nextPower;
     bool dragInitiated;
+    Renderer renderer;
+    bool material = false;
     void Start()
     {
+        renderer = GetComponent<Renderer>();
         slowmoEffect.SetActive(false);
         slowmoEffect2.SetActive(false);
+        slowMoPost.SetActive(false);
         nextPower = Time.time + cooldown;
         dragInitiated = false;
+        renderer.material = normal;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!material&&isPowerEnabled())
+        {
+            renderer.material = powerEnabled;
+            material = true;
+        }
         //Gravity
         if(transform.position.z<floor.transform.position.z)
         {
             rb.AddForce(Vector3.forward*9.8f);
         }
-        if(Input.GetButtonDown("Fire1")&&Time.time>=nextPower&&dragInitiated==false)
+        if(Input.GetButtonDown("Fire1")&&isPowerEnabled()&&dragInitiated==false)
         {
-            
-            slowmoEffect.SetActive(true);
-            slowmoEffect2.SetActive(true);
-            dragInitiated = true;
-            Time.timeScale = 0.2f;
-            Time.fixedDeltaTime = Time.timeScale * 0.02f;
-            dragInitPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
-            startPosition = dragInitPosition;
-     
+            dragInit();
         } 
         if(Input.GetButton("Fire1")&&dragInitiated)
         {
-            Debug.Log("start position in drag" + startPosition);
-            Debug.Log("In Drag");
+            
             ballPosition = transform.position;
             ballPosition.z = zOffset;
-            slowmoEffect.SetActive(true);
-            slowmoEffect2.SetActive(true);
-            Debug.Log(Input.mousePosition);
             endPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,10f));
             endPosition.z = zOffset;
-            Debug.Log("end position in drag" + endPosition);
             Vector3 direction = startPosition - endPosition;
             DrawLine(direction,ballPosition);
         }
         else if(Input.GetButtonUp("Fire1")&&dragInitiated)
         {
- 
-            slowmoEffect.SetActive(false);
-            slowmoEffect2.SetActive(false);
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = Time.timeScale * 0.02f;
-            Vector3 force = new Vector3(Mathf.Clamp((lineRenderer.GetPosition(0).x - lineRenderer.GetPosition(1).x), minForce, maxForce), Mathf.Clamp((lineRenderer.GetPosition(0).y - lineRenderer.GetPosition(1).y), minForce, maxForce),0);
-            rb.AddForce(force*ballForce, ForceMode.Impulse);
-            lineRenderer.positionCount = 0;
-            dragInitiated = false;
-            nextPower = Time.time + cooldown;
+            dragExit();
         }    
     }
     void DrawLine(Vector3 start,Vector3 end)
@@ -94,5 +85,36 @@ public class Ball : MonoBehaviour
         ContactPoint contact = collision.GetContact(0);
         GameObject effect = Instantiate(impactEffect,contact.point,Quaternion.FromToRotation(Vector3.forward, contact.normal));
         Destroy(effect,2f);
+    }
+    void dragInit()
+    {
+        slowmoEffect.SetActive(true);
+        slowmoEffect2.SetActive(true);
+        slowMoPost.SetActive(true);
+        dragInitiated = true;
+        Time.timeScale = 0.2f;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        dragInitPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
+        startPosition = dragInitPosition;
+    }
+    void dragExit()
+    {
+        slowmoEffect.SetActive(false);
+        slowmoEffect2.SetActive(false);
+        slowMoPost.SetActive(false);
+        dragInitiated = false;
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        Vector3 force = new Vector3(Mathf.Clamp((lineRenderer.GetPosition(0).x - lineRenderer.GetPosition(1).x), minForce, maxForce), Mathf.Clamp((lineRenderer.GetPosition(0).y - lineRenderer.GetPosition(1).y), minForce, maxForce), 0);
+        rb.AddForce(force * ballForce, ForceMode.Impulse);
+        lineRenderer.positionCount = 0;
+        nextPower = Time.time + cooldown;
+        material = false;
+        renderer.material = normal;
+    }
+
+    bool isPowerEnabled()
+    {
+        return Time.time >= nextPower;
     }
 }
