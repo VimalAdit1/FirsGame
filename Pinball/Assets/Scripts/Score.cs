@@ -7,7 +7,6 @@ public class Score : MonoBehaviour
     // Start is called before the first frame update
     public int scorePerBounce;
     public GameManager gameManager;
-    public GameObject volume;
     Vector3 scaleFactor = new Vector3(0.06f, 0.06f, 0.06f);
     private void OnCollisionEnter(Collision collision)
     {
@@ -25,6 +24,5 @@ public class Score : MonoBehaviour
     public void Explode()
     {
         AudioManager.instance.StartPlaying("explosion");
-        volume.SetActive(false);
     }
 }

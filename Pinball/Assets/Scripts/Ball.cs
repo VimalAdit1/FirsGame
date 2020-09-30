@@ -18,8 +18,6 @@ public class Ball : MonoBehaviour
     public float zOffset;
     public float cooldown = 5f;
     public GameObject slowMoPost;
-    Vector3 dragInitPosition;
-    Vector3 startPosition;
     Vector3 endPosition;
     Vector3 ballPosition;
     float minForce = -5f;
@@ -63,8 +61,8 @@ public class Ball : MonoBehaviour
             ballPosition.z = zOffset;
             endPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y,10f));
             endPosition.z = zOffset;
-            Vector3 direction = startPosition - endPosition;
-            DrawLine(direction,ballPosition);
+            Vector3 direction = ballPosition - endPosition;
+            DrawLine(direction.normalized,ballPosition);
         }
         else if(Input.GetButtonUp("Fire1")&&dragInitiated)
         {
@@ -88,14 +86,13 @@ public class Ball : MonoBehaviour
     }
     void dragInit()
     {
+        AudioManager.instance.StartPlaying("Slowmo");
         slowmoEffect.SetActive(true);
         slowmoEffect2.SetActive(true);
         slowMoPost.SetActive(true);
         dragInitiated = true;
-        Time.timeScale = 0.2f;
+        Time.timeScale = 0.1f;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
-        dragInitPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
-        startPosition = dragInitPosition;
     }
     void dragExit()
     {
@@ -111,6 +108,7 @@ public class Ball : MonoBehaviour
         nextPower = Time.time + cooldown;
         material = false;
         renderer.material = normal;
+        AudioManager.instance.StartPlaying("ReleaseSlowmo");
     }
 
     bool isPowerEnabled()

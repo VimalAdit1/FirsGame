@@ -25,13 +25,13 @@ public class Reactor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(health<250&&!isUnstable)
+        if(health<400&&!isUnstable)
         {
             isUnstable = true;
             StartCoroutine(SwitchCamera(3,isDestroyed));
             sphereAnimator.SetBool("isUnstable", isUnstable);
         }
-        if (health < 0 && !isDestroyed&&isUnstable)
+        if (health <=0 && !isDestroyed&&isUnstable)
         {
             isDestroyed = true;
             StartCoroutine(SwitchCamera(4,isDestroyed));
@@ -47,6 +47,7 @@ public class Reactor : MonoBehaviour
         b.enabled = true;
         b.cooldown = 5f;
         ball.transform.position = tutorialLocation.position;
+        volume.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -59,16 +60,16 @@ public class Reactor : MonoBehaviour
 
     private void hit()
     {
-        health -= 100;
+        health -= 50;
     }
     IEnumerator SwitchCamera(int seconds,bool isDestroyed)
     {
         camera.SetActive(true);
+        yield return new WaitForSeconds(seconds);
+        camera.SetActive(false);
         if(isDestroyed)
         {
             TeleportBall();
         }
-        yield return new WaitForSeconds(seconds);
-        camera.SetActive(false);
     }
 }

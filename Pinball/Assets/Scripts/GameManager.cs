@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
     }
     public void levelComplete()
     {
+        PlayerPrefs.SetInt("level", SceneManager.GetActiveScene().buildIndex+1);
         inGame = false;
         levelCompleteUI.SetActive(true);
     }
@@ -82,7 +83,13 @@ public class GameManager : MonoBehaviour
     }
     public void Play()
     {
+        PlayerPrefs.DeleteAll();
         SceneManager.LoadScene(1);
+    }
+    public void Continue()
+    {
+        int level = PlayerPrefs.GetInt("level", 1);
+        SceneManager.LoadScene(level);
     }
     public void Quit()
     {
